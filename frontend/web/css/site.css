@@ -1,5 +1,5 @@
-main > .container, main > .container-fluid
-{
+main>.container,
+main>.container-fluid {
     padding: 70px 15px 20px;
 }
 
@@ -9,7 +9,8 @@ main > .container, main > .container-fluid
     height: 60px;
 }
 
-.footer > .container, .footer > .container-fluid {
+.footer>.container,
+.footer>.container-fluid {
     padding-right: 15px;
     padding-left: 15px;
 }
@@ -20,7 +21,8 @@ main > .container, main > .container-fluid
 }
 
 /* add sorting icons to gridview sort links */
-a.asc:after, a.desc:after {
+a.asc:after,
+a.desc:after {
     content: '';
     left: 3px;
     display: inline-block;
@@ -66,40 +68,41 @@ a.desc:after {
 }
 
 /* align the logout "link" (button in form) of the navbar */
-.navbar form > button.logout {
+.navbar form>button.logout {
     padding-top: 7px;
     color: rgba(255, 255, 255, 0.5);
 }
 
 @media(max-width:767px) {
-    .navbar form > button.logout {
-        display:block;
+    .navbar form>button.logout {
+        display: block;
         text-align: left;
         width: 100%;
         padding: 10px 0;
     }
 }
 
-.navbar form > button.logout:focus,
-.navbar form > button.logout:hover {
+.navbar form>button.logout:focus,
+.navbar form>button.logout:hover {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.75);
 }
 
-.navbar form > button.logout:focus {
+.navbar form>button.logout:focus {
     outline: none;
 }
 
 .trial {
     background-image: url('../images/image9.jpg');
     background-size: cover;
-    
-    
+
+
 }
 
-.titleCustom{
-     color: white;
+.titleCustom {
+    color: white;
 }
+
 /* style breadcrumb widget as in previous bootstrap versions */
 .breadcrumb {
     background-color: var(--bs-gray-200);
@@ -107,14 +110,15 @@ a.desc:after {
     padding: .75rem 1rem;
 }
 
-.breadcrumb-item > a
-{
+.breadcrumb-item>a {
     text-decoration: none;
 }
+
 /* styles.css */
 
-.body-content {
+.trial {
     background-image: url('../images/image9.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    height: 100%;
 }

@@ -13,7 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="userbook-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>
+        <?= Html::encode($this->title) ?>
+    </h1>
 
     <p>
         <?= Html::a('Update', ['update', 'userBookId' => $model->userBookId], ['class' => 'btn btn-primary']) ?>
@@ -30,8 +32,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'userBookId',
-            'userId',
-            'bookId',
+            [
+                'attribute' => 'userId',
+                'value' => function ($model) {
+                // Assuming you have a 'category' relation in your Book model
+                return $model->user->username;
+            },
+            ],
+            [
+                'attribute' => 'bookId',
+                'value' => function ($model) {
+                // Assuming you have a 'category' relation in your Book model
+                return $model->book->bookName;
+            },
+            ],
             'issuedDate',
             'returnDate',
             'dueDate',

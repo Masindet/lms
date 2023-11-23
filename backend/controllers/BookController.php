@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
 use yii\web\UploadedFile;
+
 /**
  * BookController implements the CRUD actions for Book model.
  */
@@ -67,45 +68,6 @@ class BookController extends Controller
      * @return string|\yii\web\Response
      */
 
-
-// public function actionCreate()
-// {
-//     $model = new Book();
-    
-//     if ($this->request->isPost) {
-//         // Get the file instance
-//         $model->bookPhotoFile = UploadedFile::getInstance($model, 'bookPhotoFile');
-    
-//         // Load the model
-//         if ($model->load($this->request->post()) ) {
-
-//             // Upload the file
-//             if ($model->bookPhotoFile) {
-//                 $filePath = 'uploads/' . $model->bookPhotoFile->baseName . '.' . $model->bookPhotoFile->extension;
-//                 if ($model->bookPhotoFile->saveAs($filePath)) {
-//                     $model->bookPhoto = $filePath;
-//                     $model->save();
-//                 } else {
-//                     // Handle the case where file upload fails
-//                     Yii::$app->session->setFlash('error', 'Failed to upload the file.');
-//                 }
-//             } else {
-//                 // Handle the case where no file is uploaded
-//                 Yii::$app->session->setFlash('error', 'No file was uploaded.');
-//             }
-    
-//             return $this->redirect(['view', 'bookId' => $model->bookId]);
-//         }
-//     } else {
-//         $model->loadDefaultValues();
-//     }
-    
-//     return $this->render('create', [
-//         'model' => $model,
-//     ]);
-    
-  
-//
     public function actionCreate()
     {
         $model = new Book();
@@ -122,7 +84,10 @@ class BookController extends Controller
             }
             if ($model->validate()) {
                 if ($model->bookPhotoFile) {
-                    $filePath = $uploadPath . $model->bookPhotoFile->baseName . '.' . $model->bookPhotoFile->extension;
+                    $uniqueIdentifier = time();
+                    // $fileName = $model->bookPhotoFile->baseName . '_' . $uniqueIdentifier . '.' . $model->bookPhotoFile->extension;
+
+                    $filePath = $uploadPath . $model->bookPhotoFile->baseName . '_' . $uniqueIdentifier . '.' . $model->bookPhotoFile->extension;
 
                     if ($model->bookPhotoFile->saveAs($filePath)) {
                         // Update the model's pizzaImage attribute with the file path
@@ -163,8 +128,38 @@ class BookController extends Controller
     {
         $model = $this->findModel($bookId);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'bookId' => $model->bookId]);
+        if ($this->request->isPost) {
+            $model->load($this->request->post());
+            $model->bookPhotoFile = UploadedFile::getInstance($model, 'bookPhotoFile'); // Retrieve the uploaded file
+
+            // ... (Your existing directory creation and validation code)
+
+            if ($model->validate()) {
+                if ($model->bookPhotoFile) {
+                    $uploadPath = 'uploads/';
+                    $uniqueIdentifier = time();
+                    $filePath = $uploadPath . $model->bookPhotoFile->baseName . '_' . $uniqueIdentifier . '.' . $model->bookPhotoFile->extension;
+
+                    if ($model->bookPhotoFile->saveAs($filePath)) {
+                        // Update the model's bookPhoto attribute with the file path
+                        $model->bookPhoto = $filePath; // Assuming 'bookPhoto' is the attribute in the Book model for storing the image path
+                    } else {
+                        Yii::error('Failed to save the uploaded file.');
+                        // Handle the case where the file couldn't be saved
+                    }
+                } else {
+                    Yii::error('No file uploaded.');
+                    // Handle the case where no file is uploaded
+                }
+
+                // Save the model with the updated image path
+                if ($model->save(false)) {
+                    return $this->redirect(['view', 'bookId' => $model->bookId]);
+                } else {
+                    Yii::error('Failed to save the model.');
+                    // Handle the case where the model couldn't be saved
+                }
+            }
         }
 
         return $this->render('update', [

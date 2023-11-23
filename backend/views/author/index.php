@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="author-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>
+        <?= Html::encode($this->title) ?>
+    </h1>
 
     <p>
         <?= Html::a('Create Author', ['create'], ['class' => 'btn btn-success']) ?>
@@ -29,13 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'authorId',
             'authorName',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Author $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'authorId' => $model->authorId]);
-                 }
+                        return Url::toRoute([$action, 'authorId' => $model->authorId]);
+                    }
             ],
         ],
     ]); ?>

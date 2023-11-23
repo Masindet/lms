@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="userbook-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>
+        <?= Html::encode($this->title) ?>
+    </h1>
 
     <p>
         <?= Html::a('Create Userbook', ['create'], ['class' => 'btn btn-success']) ?>
@@ -29,18 +31,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'userBookId',
-            'userId',
-            'bookId',
+            [
+                'attribute' => 'userId',
+                'value' => function ($model) {
+                        // Assuming you have a 'category' relation in your Book model
+                        return $model->user->username;
+                    },
+            ],
+            [
+                'attribute' => 'bookId',
+                'value' => function ($model) {
+                        // Assuming you have a 'category' relation in your Book model
+                        return $model->book->bookName;
+                    },
+            ],
             'issuedDate',
             'returnDate',
-            //'dueDate',
-            //'status',
+            'dueDate',
+            'status',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Userbook $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'userBookId' => $model->userBookId]);
-                 }
+                        return Url::toRoute([$action, 'userBookId' => $model->userBookId]);
+                    }
             ],
         ],
     ]); ?>

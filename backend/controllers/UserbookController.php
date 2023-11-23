@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Book;
 use common\models\Userbook;
 use common\models\UserbookSearch;
 use yii\web\Controller;
@@ -69,9 +70,21 @@ class UserbookController extends Controller
     {
         $model = new Userbook();
 
+
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'userBookId' => $model->userBookId]);
+            if ($model->load($this->request->post())) {
+                // Set the status of the book to "Borrowed"
+                $bookId = $model->bookId;
+                $book = Book::findOne($bookId);
+                if ($book) {
+                    $book->status = 'Borrowed'; // Assuming "BORROWED" is the status code for Borrowed
+                    $book->save(false); // Save without validation
+                }
+
+                // Save the Userbook model
+                if ($model->save()) {
+                    return $this->redirect(['view', 'userBookId' => $model->userBookId]);
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -93,15 +106,27 @@ class UserbookController extends Controller
     {
         $model = $this->findModel($userBookId);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'userBookId' => $model->userBookId]);
+        $oldStatus = $model->status; // Store the old status before updating
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            if ($model->status === 'returned' && $oldStatus !== 'returned') {
+                // Update book status to 'Available' when status changes from other than 'returned' to 'returned'
+                $book = Book::findOne($model->bookId);
+                if ($book) {
+                    $book->status = 'Available'; // Set book status back to 'Available'
+                    $book->save(false); // Save without validation
+                }
+            }
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'userBookId' => $model->userBookId]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
     }
-
     /**
      * Deletes an existing Userbook model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\UserbookSearch;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -141,9 +142,20 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionAbout()
+    public function actionIssueBooks()
     {
-        return $this->render('about');
+        $searchModel = new UserbookSearch();
+
+        // Get the current user's ID
+        $userId = Yii::$app->user->id;
+
+        // Modify the search query to filter books for the logged-in user
+        $dataProvider = $searchModel->search($this->request->queryParams, $userId);
+
+        return $this->render('about', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -155,6 +167,12 @@ class SiteController extends Controller
     public function actionBook()
     {
         return $this->render('book');
+    }
+
+
+    public function actionDashboard()
+    {
+        return $this->render('dashboard');
     }
 
     public function actionSignup()

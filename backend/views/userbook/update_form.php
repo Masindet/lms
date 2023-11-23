@@ -11,18 +11,12 @@ use common\models\Book;  // Assuming the Book model is in the common\models name
 /** @var common\models\Userbook $model */
 /** @var yii\widgets\ActiveForm $form */
 
-$users = ArrayHelper::map(User::find()->all(), 'id', 'username');
-$books = ArrayHelper::map(Book::find()->where(['status' => 'Available'])->all(), 'bookId', 'bookName');
 
 ?>
 
 <div class="userbook-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'userId')->dropDownList($users, ['prompt' => 'Select User']) ?>
-
-    <?= $form->field($model, 'bookId')->dropDownList($books, ['prompt' => 'Select Book']) ?>
 
     <?= $form->field($model, 'issuedDate')->input('date') ?>
 

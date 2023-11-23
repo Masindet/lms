@@ -13,7 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="book-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>
+        <?= Html::encode($this->title) ?>
+    </h1>
 
     <p>
         <?= Html::a('Update', ['update', 'bookId' => $model->bookId], ['class' => 'btn btn-primary']) ?>
@@ -30,10 +32,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'bookId',
-            'bookPhoto',
+            [
+                'attribute' => 'bookPhoto',
+                'format' => 'html', // Set the format to HTML
+                'value' => function ($model) {
+                return Html::img(Yii::$app->request->baseUrl . '/' . $model->bookPhoto, ['width' => '200px']);
+                // Assuming 'pizzaImage' contains the image path. Modify this according to your actual attribute name.
+            },
+            ],
             'bookName',
-            'categoryId',
-            'authorId',
+            [
+                'attribute' => 'categoryId',
+                'value' => function ($model) {
+                // Assuming you have a 'category' relation in your Book model
+                return $model->category->categoryName;
+            },
+            ],
+            [
+                'attribute' => 'authorId',
+                'value' => function ($model) {
+                // Assuming you have an 'author' relation in your Book model
+                return $model->author->authorName;
+            },
+            ],
             'status',
         ],
     ]) ?>

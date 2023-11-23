@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="book-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>
+        <?= Html::encode($this->title) ?>
+    </h1>
 
     <p>
         <?= Html::a('Create Book', ['create'], ['class' => 'btn btn-success']) ?>
@@ -29,36 +31,35 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'bookId',
             [
                 'attribute' => 'bookPhoto',
                 'format' => 'html', // Set the format to HTML
                 'value' => function ($model) {
-                return Html::img(Yii::$app->request->baseUrl . '/' . $model->bookPhoto, ['width' => '200px']);
-                // Assuming 'pizzaImage' contains the image path. Modify this according to your actual attribute name.
-                },
+                        return Html::img(Yii::$app->request->baseUrl . '/' . $model->bookPhoto, ['width' => '200px']);
+                        // Assuming 'pizzaImage' contains the image path. Modify this according to your actual attribute name.
+                    },
             ],
             'bookName',
             [
                 'attribute' => 'categoryId',
                 'value' => function ($model) {
-                    // Assuming you have a 'category' relation in your Book model
-                    return $model->category->categoryName;
-                },
+                        // Assuming you have a 'category' relation in your Book model
+                        return $model->category->categoryName;
+                    },
             ],
             [
                 'attribute' => 'authorId',
                 'value' => function ($model) {
-                    // Assuming you have an 'author' relation in your Book model
-                    return $model->author->authorName;
-                },
+                        // Assuming you have an 'author' relation in your Book model
+                        return $model->author->authorName;
+                    },
             ],
-            //'status',
+            'status',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Book $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'bookId' => $model->bookId]);
-                 }
+                        return Url::toRoute([$action, 'bookId' => $model->bookId]);
+                    }
             ],
         ],
     ]); ?>
